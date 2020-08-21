@@ -2,9 +2,10 @@ package studio.codable.bitriser.app
 
 import android.app.Application
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import studio.codable.bitriser.di.appModule
+import studio.codable.bitriser.di.networkingModule
+import studio.codable.bitriser.di.repositoryModule
+import studio.codable.bitriser.di.viewModelModule
 import timber.log.Timber
 
 class App : Application() {
@@ -17,7 +18,7 @@ class App : Application() {
         startKoin {
             logger(TimberLogger())
             androidContext(this@App)
-            modules(appModule)
+            modules(viewModelModule, repositoryModule, networkingModule)
         }
     }
 }

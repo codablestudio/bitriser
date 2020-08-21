@@ -1,11 +1,15 @@
 package studio.codable.bitriser
 
 import androidx.lifecycle.ViewModel
-import timber.log.Timber
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import studio.codable.bitriser.util.repository.IApplicationRepository
 
-class MainViewModel(private val string:String) : ViewModel() {
+class MainViewModel(private val applicationRepository: IApplicationRepository) : ViewModel() {
 
-    fun test(){
-        Timber.d(string)
+    fun test() {
+        viewModelScope.launch {
+            applicationRepository.getApps()
+        }
     }
 }
