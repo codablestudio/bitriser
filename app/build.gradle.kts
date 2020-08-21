@@ -35,17 +35,23 @@ android {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
     implementation(Dependencies.kotlin)
     implementation(Dependencies.AndroidX.coreKtx)
     implementation(Dependencies.AndroidX.appCompat)
     implementation(Dependencies.AndroidX.constraintLayout)
+
+    implementation(Dependencies.Koin.android)
+    implementation(Dependencies.Koin.viewModel)
 
     implementation(Dependencies.OkHttp.core)
     implementation(Dependencies.OkHttp.interceptor)
 
     implementation(Dependencies.timber)
 
-    testImplementation("junit:junit:4.13")
+    testImplementation(Dependencies.junit)
+    testImplementation(Dependencies.Koin.test)
+
     androidTestImplementation(Dependencies.AndroidX.junit)
     androidTestImplementation(Dependencies.AndroidX.espresso)
 }

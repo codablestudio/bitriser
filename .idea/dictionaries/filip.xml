@@ -6,8 +6,10 @@
       <w>constraintlayout</w>
       <w>jakewharton</w>
       <w>kapt</w>
+      <w>koin</w>
       <w>okhttp</w>
       <w>squareup</w>
+      <w>viewmodel</w>
     </words>
   </dictionary>
 </component>
