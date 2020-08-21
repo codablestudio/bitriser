@@ -5,7 +5,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import studio.codable.bitriser.BuildConfig
-import studio.codable.bitriser.util.networking.api.ApplicationApi
+import studio.codable.bitriser.util.networking.api.application.ApplicationApi
 import studio.codable.bitriser.util.networking.interceptor.AuthInterceptor
 
 val networkingModule = module {
