@@ -5,4 +5,6 @@ import studio.codable.bitriser.util.networking.api.application.model.request.Get
 
 interface IApplicationRepository {
     suspend fun getApps(sortOrder: GetAppsRequest.SortOrder): NetworkResult<Unit>
+
+    suspend fun getApp(appSlug : String): NetworkResult<Unit>
 }
