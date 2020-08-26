@@ -6,6 +6,7 @@ plugins {
     kotlin(Plugins.Kotlin.android)
     kotlin(Plugins.Kotlin.androidExtensions)
     kotlin(Plugins.Kotlin.kapt)
+    id(Plugins.swaggerGradleCodegen) version Versions.swaggerGradleCodegen
 }
 
 val file = rootProject.file("api.properties")
@@ -41,10 +42,15 @@ android {
         getByName("debug") {
             buildConfigField("String", "BASE_URL", "\"https://api.bitrise.io/\"")
             buildConfigField("String", "API_VERSION", "\"v0.1/\"")
-            buildConfigField("String", "PERSONAL_ACCESS_TOKEN", apiProperties["PERSONAL_ACCESS_TOKEN"].toString())
+            buildConfigField("String", "PERSONAL_ACCESS_TOKEN", '\"' + apiProperties["PERSONAL_ACCESS_TOKEN"].toString() + '\"')
 
 
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
@@ -75,4 +81,13 @@ dependencies {
 
     androidTestImplementation(Dependencies.AndroidX.junit)
     androidTestImplementation(Dependencies.AndroidX.espresso)
+}
+
+
+generateSwagger {
+    platform = "kotlin-coroutines"
+    packageName = "studio.codable.bitriser.util.networking"
+    specVersion = "1.0.0"
+    inputFile = file("../app/bitrise_api_swagger.json")
+    outputDir = project.layout.projectDirectory.dir("./src/main/java").asFile
 }

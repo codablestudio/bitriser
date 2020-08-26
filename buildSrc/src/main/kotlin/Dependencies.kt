@@ -21,6 +21,7 @@ object Versions {
     const val junit = "4.13"
     const val retrofit = "2.8.1"
     const val moshi = "1.8.0"
+    const val swaggerGradleCodegen = "1.4.1"
 }
 
 object Dependencies {
@@ -74,4 +75,6 @@ object Plugins {
         const val kapt = "kapt"
         const val android = "android"
     }
+
+    const val swaggerGradleCodegen = "com.yelp.codegen.plugin"
 }

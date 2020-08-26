@@ -14,3 +14,5 @@
 .cxx
 
 api.properties
+/app/src/main/java/.swagger-codegen
+/app/src/main/java/swagger.json
