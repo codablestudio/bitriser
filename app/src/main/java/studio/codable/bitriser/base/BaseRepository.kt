@@ -45,7 +45,7 @@ abstract class BaseRepository {
         }
     }
 
-    protected fun convertErrorBody(throwable: HttpException): ErrorResponseModel? {
+    fun convertErrorBody(throwable: HttpException): ErrorResponseModel? {
         return try {
             throwable.response()?.errorBody()?.source()?.let {
                 Timber.d("Converting error body: $it")

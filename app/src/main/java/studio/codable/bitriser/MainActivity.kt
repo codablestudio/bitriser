@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
 import org.koin.android.viewmodel.ext.android.viewModel
+import studio.codable.bitriser.base.BaseActivity
+import timber.log.Timber
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val vm: MainViewModel by viewModel()
 
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         vm.errors.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
+                Timber.d(it.toString())
                 Toast.makeText(this, it.extractStringToDisplay(), Toast.LENGTH_SHORT).show()
             }
         })

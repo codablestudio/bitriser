@@ -17,11 +17,10 @@ object Versions {
     const val kotlin = "1.4.0"
     const val okHttp = "4.8.1"
     const val timber = "4.7.1"
-    const val koin = "2.1.5"
+    const val koin = "2.2.0-alpha-1"
     const val junit = "4.13"
     const val retrofit = "2.8.1"
     const val moshi = "1.9.3"
-    const val swaggerGradleCodegen = "1.4.1"
 }
 
 object Dependencies {
@@ -63,7 +62,11 @@ object Dependencies {
         const val codegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
     }
 
-    const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+    object Kotlin{
+        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
+        const val reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
+    }
+
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
     const val junit = "junit:junit:${Versions.junit}"
 }
@@ -78,6 +81,4 @@ object Plugins {
         const val kapt = "kapt"
         const val android = "android"
     }
-
-    const val swaggerGradleCodegen = "com.yelp.codegen.plugin"
 }

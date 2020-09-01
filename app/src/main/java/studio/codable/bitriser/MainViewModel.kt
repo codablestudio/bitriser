@@ -2,11 +2,9 @@ package studio.codable.bitriser
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import studio.codable.bitriser.base.BaseViewModel
-import studio.codable.bitriser.util.networking.api.application.model.request.GetAppsRequest
 import studio.codable.bitriser.util.repository.IApplicationRepository
 
 class MainViewModel(private val applicationRepository: IApplicationRepository) : BaseViewModel() {
@@ -16,7 +14,7 @@ class MainViewModel(private val applicationRepository: IApplicationRepository) :
 
     fun test() {
         viewModelScope.launch {
-            applicationRepository.getApps(GetAppsRequest.SortOrder.CREATED_AT).process {
+            applicationRepository.getApps().process {
                 _apps.value = Unit
             }
         }

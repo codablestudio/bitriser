@@ -1,20 +1,14 @@
 package studio.codable.bitriser.util.networking.api.application
 
-import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Path
-import studio.codable.bitriser.BuildConfig
-import studio.codable.bitriser.util.networking.NetworkResult
-import studio.codable.bitriser.util.networking.api.application.model.request.GetAppsRequest
+import retrofit2.http.Query
 import studio.codable.bitriser.util.networking.api.application.model.response.endpointResponse.GetAppsResponse
-import studio.codable.bitriser.util.networking.api.application.model.response.submodel.AppItemResponse
 
 interface ApplicationApi {
-
     @GET("v0.1/apps")
-    suspend fun getApps(@Body getAppsRequest: GetAppsRequest): GetAppsResponse
+    suspend fun apps(@Query("sort_by") sortBy: String?, @Query("next") next:String?, @Query("limit") limit: Int?): GetAppsResponse
 
     @GET("v0.1/apps/{app-slug}")
-    suspend fun getApp(@Path("app-slug") appSlug : String): AppItemResponse
-
+    suspend fun app(@Path("app-slug") appSlug: String)
 }

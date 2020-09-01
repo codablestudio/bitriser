@@ -6,7 +6,6 @@ plugins {
     kotlin(Plugins.Kotlin.android)
     kotlin(Plugins.Kotlin.androidExtensions)
     kotlin(Plugins.Kotlin.kapt)
-//    id(Plugins.swaggerGradleCodegen) version Versions.swaggerGradleCodegen
 }
 
 val file = rootProject.file("api.properties")
@@ -54,12 +53,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions{
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(Dependencies.kotlin)
+    implementation(Dependencies.Kotlin.stdlib)
+    implementation(Dependencies.Kotlin.reflect)
+
     implementation(Dependencies.AndroidX.appCompat)
     implementation(Dependencies.AndroidX.constraintLayout)
 
@@ -78,9 +83,9 @@ dependencies {
     implementation(Dependencies.Retrofit.core)
     implementation(Dependencies.Retrofit.moshiConverter)
 
-    implementation(Dependencies.Moshi.core)
-    implementation(Dependencies.Moshi.adapters)
-    implementation(Dependencies.Moshi.codegen)
+//    implementation(Dependencies.Moshi.core)
+//    implementation(Dependencies.Moshi.adapters)
+//    kapt(Dependencies.Moshi.codegen)
 
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.Koin.test)
@@ -88,12 +93,3 @@ dependencies {
     androidTestImplementation(Dependencies.AndroidX.junit)
     androidTestImplementation(Dependencies.AndroidX.espresso)
 }
-//
-//
-//generateSwagger {
-//    platform = "kotlin-coroutines"
-//    packageName = "studio.codable.bitriser.util.networking"
-//    specVersion = "1.0.0"
-//    inputFile = file("../app/bitrise_api_swagger.json")
-//    outputDir = project.layout.projectDirectory.dir("./src/main/java").asFile
-//}
