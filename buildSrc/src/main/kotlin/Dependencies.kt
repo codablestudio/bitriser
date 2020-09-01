@@ -34,6 +34,7 @@ object Dependencies {
         const val espresso = "androidx.test.espresso:espresso-core:${Versions.AndroidX.espresso}"
 
         object Compose {
+
             const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
             const val uiTooling = "androidx.ui:ui-tooling:${Versions.AndroidX.compose}"
             const val foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
