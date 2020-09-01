@@ -14,13 +14,13 @@ object Versions {
         }
     }
 
-    const val kotlin = "1.3.72"
+    const val kotlin = "1.4.0"
     const val okHttp = "4.8.1"
     const val timber = "4.7.1"
     const val koin = "2.1.5"
     const val junit = "4.13"
     const val retrofit = "2.8.1"
-    const val moshi = "1.8.0"
+    const val moshi = "1.9.3"
     const val swaggerGradleCodegen = "1.4.1"
 }
 
@@ -54,10 +54,13 @@ object Dependencies {
 
     object Retrofit {
         const val core = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
+        const val moshiConverter =  "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
     }
 
     object Moshi {
         const val core = "com.squareup.moshi:moshi:${Versions.moshi}"
+        const val adapters = "com.squareup.moshi:moshi-adapters:${Versions.moshi}"
+        const val codegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
     }
 
     const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"

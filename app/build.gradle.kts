@@ -6,7 +6,7 @@ plugins {
     kotlin(Plugins.Kotlin.android)
     kotlin(Plugins.Kotlin.androidExtensions)
     kotlin(Plugins.Kotlin.kapt)
-    id(Plugins.swaggerGradleCodegen) version Versions.swaggerGradleCodegen
+//    id(Plugins.swaggerGradleCodegen) version Versions.swaggerGradleCodegen
 }
 
 val file = rootProject.file("api.properties")
@@ -27,6 +27,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packagingOptions{
+        exclude("META-INF/*.kotlin_module")
+    }
+
 //    signingConfigs {
 //        create("release") {
 //
@@ -42,9 +46,7 @@ android {
         getByName("debug") {
             buildConfigField("String", "BASE_URL", "\"https://api.bitrise.io/\"")
             buildConfigField("String", "API_VERSION", "\"v0.1/\"")
-            buildConfigField("String", "PERSONAL_ACCESS_TOKEN", '\"' + apiProperties["PERSONAL_ACCESS_TOKEN"].toString() + '\"')
-
-
+            buildConfigField("String", "PERSONAL_ACCESS_TOKEN", "${apiProperties["PERSONAL_ACCESS_TOKEN"]}")
         }
     }
 
@@ -74,7 +76,11 @@ dependencies {
     implementation(Dependencies.timber)
 
     implementation(Dependencies.Retrofit.core)
+    implementation(Dependencies.Retrofit.moshiConverter)
+
     implementation(Dependencies.Moshi.core)
+    implementation(Dependencies.Moshi.adapters)
+    implementation(Dependencies.Moshi.codegen)
 
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.Koin.test)
@@ -82,12 +88,12 @@ dependencies {
     androidTestImplementation(Dependencies.AndroidX.junit)
     androidTestImplementation(Dependencies.AndroidX.espresso)
 }
-
-
-generateSwagger {
-    platform = "kotlin-coroutines"
-    packageName = "studio.codable.bitriser.util.networking"
-    specVersion = "1.0.0"
-    inputFile = file("../app/bitrise_api_swagger.json")
-    outputDir = project.layout.projectDirectory.dir("./src/main/java").asFile
-}
+//
+//
+//generateSwagger {
+//    platform = "kotlin-coroutines"
+//    packageName = "studio.codable.bitriser.util.networking"
+//    specVersion = "1.0.0"
+//    inputFile = file("../app/bitrise_api_swagger.json")
+//    outputDir = project.layout.projectDirectory.dir("./src/main/java").asFile
+//}

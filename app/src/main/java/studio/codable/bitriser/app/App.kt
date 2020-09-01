@@ -16,7 +16,7 @@ class App : Application() {
         Timber.plant(Timber.DebugTree())
 
         startKoin {
-            logger(TimberLogger())
+//            logger(TimberLogger())
             androidContext(this@App)
             modules(viewModelModule, repositoryModule, networkingModule)
         }
