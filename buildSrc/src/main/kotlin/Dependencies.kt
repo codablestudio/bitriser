@@ -6,8 +6,9 @@ object Versions {
         const val constraintLayout = "1.1.3"
         const val junit = "1.1.1"
         const val espresso = "3.2.0"
+        const val compose = "1.0.0-alpha01"
 
-        object Ktx{
+        object Ktx {
             const val viewModel = "2.2.0"
             const val activity = "1.1.0"
             const val core = "1.3.1"
@@ -32,8 +33,25 @@ object Dependencies {
         const val junit = "androidx.test.ext:junit:${Versions.AndroidX.junit}"
         const val espresso = "androidx.test.espresso:espresso-core:${Versions.AndroidX.espresso}"
 
-        object Ktx{
-            const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.Ktx.viewModel}"
+        object Compose {
+            const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
+            const val uiTooling = "androidx.ui:ui-tooling:${Versions.AndroidX.compose}"
+            const val foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
+
+            object Material {
+                const val core = "androidx.compose.material:material:${Versions.AndroidX.compose}"
+                const val iconsCore = "androidx.compose.material:material-icons-core:${Versions.AndroidX.compose}"
+                const val iconsExtended = "androidx.compose.material:material-icons-extended:${Versions.AndroidX.compose}"
+            }
+
+            object Runtime{
+                const val livedata = "androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}"
+            }
+        }
+
+        object Ktx {
+            const val viewModel =
+                "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.Ktx.viewModel}"
             const val activity = "androidx.activity:activity-ktx:${Versions.AndroidX.Ktx.activity}"
             const val core = "androidx.core:core-ktx:${Versions.AndroidX.Ktx.core}"
         }
@@ -53,7 +71,7 @@ object Dependencies {
 
     object Retrofit {
         const val core = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
-        const val moshiConverter =  "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
+        const val moshiConverter = "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
     }
 
     object Moshi {
@@ -62,7 +80,7 @@ object Dependencies {
         const val codegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
     }
 
-    object Kotlin{
+    object Kotlin {
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
         const val reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
     }
@@ -73,12 +91,14 @@ object Dependencies {
 
 object Plugins {
 
-    const val androidApplication = "com.android.application"
+    object Android {
+        const val android = "android"
+        const val application = "com.android.application"
+        const val extensions = "android.extensions"
+    }
 
     object Kotlin {
-
-        const val androidExtensions = "android.extensions"
+        const val kotlin = "org.jetbrains.kotlin.android"
         const val kapt = "kapt"
-        const val android = "android"
     }
 }

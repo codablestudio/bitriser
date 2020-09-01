@@ -2,9 +2,9 @@ import java.util.Properties
 import java.io.FileInputStream
 
 plugins {
-    id(Plugins.androidApplication)
-    kotlin(Plugins.Kotlin.android)
-    kotlin(Plugins.Kotlin.androidExtensions)
+    id(Plugins.Android.application)
+    kotlin(Plugins.Android.android)
+    kotlin(Plugins.Android.extensions)
     kotlin(Plugins.Kotlin.kapt)
 }
 
@@ -24,6 +24,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures{
+        this.compose = true
     }
 
     packagingOptions{
@@ -56,6 +60,11 @@ android {
 
     kotlinOptions{
         jvmTarget = "1.8"
+        useIR = true
+    }
+
+    composeOptions {
+        this.kotlinCompilerExtensionVersion = "1.0.0-alpha01"
     }
 }
 
@@ -82,6 +91,14 @@ dependencies {
 
     implementation(Dependencies.Retrofit.core)
     implementation(Dependencies.Retrofit.moshiConverter)
+
+    implementation(Dependencies.AndroidX.Compose.ui)
+    implementation(Dependencies.AndroidX.Compose.uiTooling)
+    implementation(Dependencies.AndroidX.Compose.foundation)
+    implementation(Dependencies.AndroidX.Compose.Material.core)
+    implementation(Dependencies.AndroidX.Compose.Material.iconsCore)
+    implementation(Dependencies.AndroidX.Compose.Material.iconsExtended)
+    implementation(Dependencies.AndroidX.Compose.Runtime.livedata)
 
 //    implementation(Dependencies.Moshi.core)
 //    implementation(Dependencies.Moshi.adapters)
