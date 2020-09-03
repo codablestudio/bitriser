@@ -2,14 +2,17 @@ package studio.codable.bitriser.di
 
 //import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import studio.codable.bitriser.BuildConfig
-import studio.codable.bitriser.util.networking.api.application.ApplicationApi
+import studio.codable.bitriser.util.networking.apis.ApplicationApi
 import studio.codable.bitriser.util.networking.interceptor.AuthInterceptor
+import studio.codable.bitriser.util.networking.tools.GeneratedCodeConverters.converterFactory
+import studio.codable.bitriser.util.networking.tools.TypesAdapterFactory
 
 val networkingModule = module {
     factory { AuthInterceptor() }
@@ -21,7 +24,9 @@ val networkingModule = module {
 
 fun provideMoshi(): Moshi = Moshi.Builder()
 //    .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
-    .build()
+        .add(KotlinJsonAdapterFactory())
+        .add(TypesAdapterFactory())
+        .build()
 
 fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
     return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)

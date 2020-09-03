@@ -21,7 +21,7 @@ object Versions {
     const val koin = "2.2.0-alpha-1"
     const val junit = "4.13"
     const val retrofit = "2.8.1"
-    const val moshi = "1.9.3"
+    const val moshi = "1.9.2"
 }
 
 object Dependencies {
@@ -79,6 +79,7 @@ object Dependencies {
         const val core = "com.squareup.moshi:moshi:${Versions.moshi}"
         const val adapters = "com.squareup.moshi:moshi-adapters:${Versions.moshi}"
         const val codegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
+        const val kotlin = "com.squareup.moshi:moshi-kotlin:${Versions.moshi}"
     }
 
     object Kotlin {

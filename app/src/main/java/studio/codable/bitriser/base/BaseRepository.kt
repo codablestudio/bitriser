@@ -5,8 +5,8 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import studio.codable.bitriser.util.networking.ErrorResponseModel
 import studio.codable.bitriser.util.networking.NetworkResult
-import studio.codable.bitriser.util.networking.api.ErrorResponseModel
 import timber.log.Timber
 import java.io.IOException
 

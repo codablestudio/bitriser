@@ -6,6 +6,8 @@ plugins {
     kotlin(Plugins.Android.android)
     kotlin(Plugins.Android.extensions)
     kotlin(Plugins.Kotlin.kapt)
+//    id("kotlin-android")
+    id("com.yelp.codegen.plugin") version "1.4.1"
 }
 
 val file = rootProject.file("api.properties")
@@ -22,6 +24,8 @@ android {
         targetSdkVersion(29)
         versionCode = 1
         versionName = "1.0"
+
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -68,6 +72,10 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
@@ -100,13 +108,28 @@ dependencies {
     implementation(Dependencies.AndroidX.Compose.Material.iconsExtended)
     implementation(Dependencies.AndroidX.Compose.Runtime.livedata)
 
-//    implementation(Dependencies.Moshi.core)
-//    implementation(Dependencies.Moshi.adapters)
-//    kapt(Dependencies.Moshi.codegen)
+    implementation(Dependencies.Moshi.core)
+    implementation(Dependencies.Moshi.adapters)
+    implementation(Dependencies.Moshi.kotlin)
+    kapt(Dependencies.Moshi.codegen)
 
+    implementation ("com.jakewharton.threetenabp:threetenabp:1.2.2")
+
+    implementation ("com.github.zsoltk:compose-router:0.17.0")
+
+//    implementation ("androidx.multidex:multidex:2.0.1")
+     
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.Koin.test)
 
     androidTestImplementation(Dependencies.AndroidX.junit)
     androidTestImplementation(Dependencies.AndroidX.espresso)
+}
+
+generateSwagger {
+    platform = "kotlin-coroutines"
+    packageName = "studio.codable.bitriser.util.networking"
+    specVersion = "1.0.0"
+    inputFile = file("../app/bitrise_api_swagger.json")
+    outputDir = project.layout.projectDirectory.dir("./src/main/java").asFile
 }

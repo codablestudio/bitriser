@@ -5,19 +5,19 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.ui.tooling.preview.Preview
-import studio.codable.bitriser.util.networking.api.application.model.response.submodel.AccountOwnerResponse
-import studio.codable.bitriser.util.networking.api.application.model.response.submodel.AppItemResponse
+import studio.codable.bitriser.model.AppInfo
+import studio.codable.bitriser.model.OwnerAccount
 
 @Preview
 @Composable
 fun AppListPreview() {
     AppList(
         listOf(
-            AppItemResponse(
+            AppInfo(
                 "",
                 isDisabled = false,
                 isPublic = true,
-                AccountOwnerResponse("", "Filip", ""),
+                OwnerAccount("", "Filip", ""),
                 "project type",
                 "provider",
                 "MrPranklin",
@@ -26,11 +26,11 @@ fun AppListPreview() {
                 "",
                 1,
                 "App title"
-            ), AppItemResponse(
+            ), AppInfo(
                 "",
                 isDisabled = false,
                 isPublic = true,
-                AccountOwnerResponse("", "Filip", ""),
+                OwnerAccount("", "Filip", ""),
                 "project type",
                 "provider",
                 "MrPranklin",
@@ -41,13 +41,13 @@ fun AppListPreview() {
                 "App title"
             )
         )
-    )
+    ){}
 }
 
 @Composable
-fun AppList(appList: List<AppItemResponse>) {
-    LazyColumnForIndexed(items = appList) { index, appItem ->
-        AppItem(appData = appItem)
+fun AppList(appList: List<AppInfo>, onItemClick: (AppInfo) -> Unit) {
+    LazyColumnForIndexed(items = appList) { index, appInfo ->
+        AppItem(appInfo = appInfo, onItemClick)
         if (index != appList.size - 1) {
             Divider(color = MaterialTheme.colors.primary)
         }
