@@ -6,5 +6,5 @@ import studio.codable.bitriser.MainViewModel
 
 val viewModelModule = module {
 
-    viewModel { MainViewModel(get()) }
+    viewModel { MainViewModel(get(), get()) }
 }

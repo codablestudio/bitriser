@@ -5,5 +5,5 @@ import studio.codable.bitriser.util.networking.NetworkResult
 
 interface IBuildsRepository {
 
-    suspend fun getBuilds(appSlug: String): NetworkResult<List<BuildInfo>>
+    suspend fun getBuilds(): NetworkResult<List<BuildInfo>>
 }

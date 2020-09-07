@@ -10,6 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import studio.codable.bitriser.BuildConfig
 import studio.codable.bitriser.util.networking.apis.ApplicationApi
+import studio.codable.bitriser.util.networking.apis.BuildsApi
 import studio.codable.bitriser.util.networking.interceptor.AuthInterceptor
 import studio.codable.bitriser.util.networking.tools.GeneratedCodeConverters.converterFactory
 import studio.codable.bitriser.util.networking.tools.TypesAdapterFactory
@@ -19,6 +20,7 @@ val networkingModule = module {
     factory { provideMoshi() }
     factory { provideOkHttpClient(get()) }
     factory { provideApplicationApi(get()) }
+    factory { provideBuildsApi(get()) }
     single { provideRetrofit(get(), get()) }
 }
 
@@ -46,4 +48,8 @@ fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
 
 fun provideApplicationApi(retrofit: Retrofit): ApplicationApi {
     return retrofit.create(ApplicationApi::class.java)
+}
+
+fun provideBuildsApi(retrofit: Retrofit): BuildsApi {
+    return retrofit.create(BuildsApi::class.java)
 }

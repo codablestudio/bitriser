@@ -82,6 +82,7 @@ dependencies {
 
     implementation(Dependencies.material)
 
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
     implementation(Dependencies.Kotlin.stdlib)
     implementation(Dependencies.Kotlin.reflect)
 

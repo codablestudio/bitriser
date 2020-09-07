@@ -8,6 +8,7 @@ package studio.codable.bitriser.util.networking.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import studio.codable.bitriser.model.BuildInfo
 
 /**
  * @property abortReason
@@ -47,7 +48,7 @@ data class V0BuildListAllResponseItemModel(
     @Json(name = "finished_at") @field:Json(name = "finished_at") var finishedAt: String? = null,
     @Json(name = "is_on_hold") @field:Json(name = "is_on_hold") var isOnHold: Boolean? = null,
     @Json(name = "machine_type_id") @field:Json(name = "machine_type_id") var machineTypeId: String? = null,
-    @Json(name = "original_build_params") @field:Json(name = "original_build_params") var originalBuildParams: String? = null,
+    @Json(name = "original_build_params") @field:Json(name = "original_build_params") var originalBuildParams: BuildInfo.BuildParams? = null,
     @Json(name = "pull_request_id") @field:Json(name = "pull_request_id") var pullRequestId: Int? = null,
     @Json(name = "pull_request_target_branch") @field:Json(name = "pull_request_target_branch") var pullRequestTargetBranch: String? = null,
     @Json(name = "pull_request_view_url") @field:Json(name = "pull_request_view_url") var pullRequestViewUrl: String? = null,

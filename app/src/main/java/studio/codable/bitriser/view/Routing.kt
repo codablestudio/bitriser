@@ -4,5 +4,6 @@ import studio.codable.bitriser.model.AppInfo
 
 sealed class Routing {
     object AppList : Routing()
-    data class AppDetails(val appInfo: AppInfo): Routing()
+    object BuildList : Routing()
+    data class AppDetails(val appInfo: AppInfo) : Routing()
 }

@@ -9,6 +9,7 @@ package studio.codable.bitriser.util.networking.apis
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import studio.codable.bitriser.BuildConfig
 import studio.codable.bitriser.util.networking.models.ServiceStandardErrorRespModel
 import studio.codable.bitriser.util.networking.models.V0BuildAbortParams
 import studio.codable.bitriser.util.networking.models.V0BuildAbortResponseModel
@@ -105,13 +106,13 @@ interface BuildsApi {
     @Headers(
         "X-Operation-ID: build-list-all"
     )
-    @GET("builds")
+    @GET("${BuildConfig.API_VERSION}/builds")
     suspend fun buildListAll(
-        @retrofit2.http.Query("owner_slug") ownerSlug: String?,
-        @retrofit2.http.Query("is_on_hold") isOnHold: Boolean?,
-        @retrofit2.http.Query("status") status: Int?,
-        @retrofit2.http.Query("next") next: String?,
-        @retrofit2.http.Query("limit") limit: Int?
+        @retrofit2.http.Query("owner_slug") ownerSlug: String? = null,
+        @retrofit2.http.Query("is_on_hold") isOnHold: Boolean? = null,
+        @retrofit2.http.Query("status") status: Int? = null,
+        @retrofit2.http.Query("next") next: String? = null,
+        @retrofit2.http.Query("limit") limit: Int? = null
     ): V0BuildListAllResponseModel
     /**
      * Get the build log of a build

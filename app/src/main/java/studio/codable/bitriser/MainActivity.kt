@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.ui.platform.setContent
+import androidx.lifecycle.LiveData
 import com.github.zsoltk.compose.backpress.AmbientBackPressHandler
 import com.github.zsoltk.compose.backpress.BackPressHandler
 import com.github.zsoltk.compose.router.Router
@@ -13,6 +14,7 @@ import studio.codable.bitriser.base.BaseActivity
 import studio.codable.bitriser.model.AppInfo
 import studio.codable.bitriser.view.Routing
 import studio.codable.bitriser.view.application.ApplicationDetailsFragment
+import studio.codable.bitriser.view.builds.BuildListScreen
 import studio.codable.bitriser.view.custom.AppList
 import studio.codable.bitriser.view.custom.LiveDataAppItemsList
 import timber.log.Timber
@@ -21,8 +23,8 @@ class MainActivity : BaseActivity() {
 
     companion object {
         @Composable
-        fun Content(vm: MainViewModel, onItemClick: (AppInfo) -> Unit) {
-            LiveDataAppItemsList(liveData = vm.apps) {
+        fun Content(liveData: LiveData<List<AppInfo>>, onItemClick: (AppInfo) -> Unit) {
+            LiveDataAppItemsList(liveData = liveData) {
                 AppList(appList = it, onItemClick)
             }
         }
@@ -38,17 +40,15 @@ class MainActivity : BaseActivity() {
         setContent {
             Providers(AmbientBackPressHandler provides backPressHandler) {
                 MainActivityContent(
-                    defaultRouting = Routing.AppList,
+                    defaultRouting = Routing.BuildList,
                     vm = vm
                 )
             }
         }
 
-        vm.test()
-
         vm.errors.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
-                Timber.d(it.toString())
+                Timber.e(it.toString())
                 Toast.makeText(this, it.extractStringToDisplay(), Toast.LENGTH_SHORT).show()
             }
         }
@@ -66,12 +66,20 @@ fun MainActivityContent(
     defaultRouting: Routing,
     vm: MainViewModel
 ) {
-    Router("AppList", defaultRouting) { backStack ->
+    Router("BuildList", defaultRouting) { backStack ->
         when (val routing = backStack.last()) {
             is Routing.AppList -> {
-                MainActivity.Content(vm = vm) {
+                vm.getApps()
+                MainActivity.Content(liveData = vm.apps) {
                     backStack.push(Routing.AppDetails(it))
                 }
+            }
+
+            is Routing.BuildList -> {
+                vm.getBuilds()
+                BuildListScreen.Content(
+                    builds = vm.builds
+                )
             }
 
             is Routing.AppDetails -> {
