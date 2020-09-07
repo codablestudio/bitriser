@@ -8,47 +8,11 @@ import androidx.ui.tooling.preview.Preview
 import studio.codable.bitriser.model.AppInfo
 import studio.codable.bitriser.model.OwnerAccount
 
-@Preview
 @Composable
-fun AppListPreview() {
-    AppList(
-        listOf(
-            AppInfo(
-                "",
-                isDisabled = false,
-                isPublic = true,
-                OwnerAccount("", "Filip", ""),
-                "project type",
-                "provider",
-                "MrPranklin",
-                "",
-                "github/mrpranklin",
-                "",
-                1,
-                "App title"
-            ), AppInfo(
-                "",
-                isDisabled = false,
-                isPublic = true,
-                OwnerAccount("", "Filip", ""),
-                "project type",
-                "provider",
-                "MrPranklin",
-                "",
-                "github/mrpranklin",
-                "",
-                1,
-                "App title"
-            )
-        )
-    ){}
-}
-
-@Composable
-fun AppList(appList: List<AppInfo>, onItemClick: (AppInfo) -> Unit) {
-    LazyColumnForIndexed(items = appList) { index, appInfo ->
+fun AppList(apps: List<AppInfo>, onItemClick: (AppInfo) -> Unit) {
+    LazyColumnForIndexed(items = apps) { index, appInfo ->
         AppItem(appInfo = appInfo, onItemClick)
-        if (index != appList.size - 1) {
+        if (index != apps.size - 1) {
             Divider(color = MaterialTheme.colors.primary)
         }
     }

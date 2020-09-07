@@ -2,33 +2,39 @@ package studio.codable.bitriser
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
+import androidx.compose.foundation.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Tab
+import androidx.compose.material.TabConstants
+import androidx.compose.material.TabConstants.defaultTabIndicatorOffset
+import androidx.compose.material.TabRow
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
-import androidx.lifecycle.LiveData
 import com.github.zsoltk.compose.backpress.AmbientBackPressHandler
 import com.github.zsoltk.compose.backpress.BackPressHandler
+import com.github.zsoltk.compose.router.BackStack
 import com.github.zsoltk.compose.router.Router
 import org.koin.android.viewmodel.ext.android.viewModel
 import studio.codable.bitriser.base.BaseActivity
 import studio.codable.bitriser.model.AppInfo
 import studio.codable.bitriser.view.Routing
 import studio.codable.bitriser.view.application.ApplicationDetailsFragment
-import studio.codable.bitriser.view.builds.BuildListScreen
 import studio.codable.bitriser.view.custom.AppList
-import studio.codable.bitriser.view.custom.LiveDataAppItemsList
+import studio.codable.bitriser.view.custom.BuildList
+import studio.codable.bitriser.view.custom.LoaderUntilLoaded
 import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
-    companion object {
-        @Composable
-        fun Content(liveData: LiveData<List<AppInfo>>, onItemClick: (AppInfo) -> Unit) {
-            LiveDataAppItemsList(liveData = liveData) {
-                AppList(appList = it, onItemClick)
-            }
-        }
-    }
+//    companion object {
+//        @Composable
+//        fun Content(liveData: LiveData<List<AppInfo>>, onItemClick: (AppInfo) -> Unit) {
+//            LiveDataAppItemsList(liveData = liveData) {
+//                AppList(appList = it, onItemClick)
+//            }
+//        }
+//    }
 
     private val vm: MainViewModel by viewModel()
 
@@ -40,7 +46,7 @@ class MainActivity : BaseActivity() {
         setContent {
             Providers(AmbientBackPressHandler provides backPressHandler) {
                 MainActivityContent(
-                    defaultRouting = Routing.BuildList,
+                    defaultRouting = Routing.HomeScreen,
                     vm = vm
                 )
             }
@@ -68,18 +74,8 @@ fun MainActivityContent(
 ) {
     Router("BuildList", defaultRouting) { backStack ->
         when (val routing = backStack.last()) {
-            is Routing.AppList -> {
-                vm.getApps()
-                MainActivity.Content(liveData = vm.apps) {
-                    backStack.push(Routing.AppDetails(it))
-                }
-            }
-
-            is Routing.BuildList -> {
-                vm.getBuilds()
-                BuildListScreen.Content(
-                    builds = vm.builds
-                )
+            is Routing.HomeScreen -> {
+                MainContent(backStack = backStack, vm = vm)
             }
 
             is Routing.AppDetails -> {
@@ -90,3 +86,72 @@ fun MainActivityContent(
         }
     }
 }
+
+@Composable
+private fun MainContent(
+    backStack: BackStack<Routing>,
+    vm: MainViewModel
+) {
+    when (val routing = backStack.last()) {
+        is Routing.HomeScreen -> {
+            Tabs(0, vm, backStack)
+        }
+
+        is Routing.AppDetails -> {
+            OpenAppDetails(routing.appInfo)
+        }
+    }
+}
+
+@Composable
+private fun OpenAppDetails(appInfo: AppInfo) {
+    ApplicationDetailsFragment.Content(
+        appInfo = appInfo
+    )
+}
+
+@Composable
+private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: BackStack<Routing>) {
+    var state by remember { mutableStateOf(defaultSelectedIndex) }
+
+    val tabItems = listOf(
+        TabItem("Apps") {
+            LoaderUntilLoaded(vm.apps) { apps ->
+                AppList(apps = apps) {
+                    backStack.push(Routing.AppDetails(it))
+                }
+            }
+        },
+        TabItem("Builds") {
+            LoaderUntilLoaded(itemList = vm.builds) { builds ->
+                BuildList(builds = builds){
+
+                }
+            }
+        }
+    )
+
+    Column {
+        TabRow(selectedTabIndex = state, indicator = { tabPositions ->
+            TabConstants.DefaultIndicator(
+                Modifier.defaultTabIndicatorOffset(tabPositions[state])
+            )
+        }) {
+            tabItems.forEachIndexed { index, tabItem ->
+                Tab(
+                    selected = state == index,
+                    onClick = { state = index },
+                    text = { Text(text = tabItem.title) })
+            }
+        }
+
+        when(state){
+            0 -> vm.getApps()
+            1 -> vm.getBuilds()
+        }
+
+        tabItems[state].composable()
+    }
+}
+
+data class TabItem(val title: String, val composable: @Composable() () -> Unit)

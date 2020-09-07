@@ -17,27 +17,6 @@ import androidx.ui.tooling.preview.Preview
 import studio.codable.bitriser.model.AppInfo
 import studio.codable.bitriser.model.OwnerAccount
 
-@Preview
-@Composable
-fun AppItemPreview() {
-    AppItem(
-        AppInfo(
-            "",
-            isDisabled = false,
-            isPublic = true,
-            OwnerAccount("", "Filip", ""),
-            "project type",
-            "provider",
-            "MrPranklin",
-            "",
-            "github/mrpranklin",
-            "",
-            1,
-            "App title"
-        )
-    ){}
-}
-
 @Composable
 fun AppItem(appInfo: AppInfo, onClick: (AppInfo) -> Unit) {
     Card(
