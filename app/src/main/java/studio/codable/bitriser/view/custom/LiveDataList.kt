@@ -12,16 +12,18 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.LiveData
 import androidx.ui.tooling.preview.Preview
-import studio.codable.bitriser.model.AppInfo
 
 @Composable
-fun LiveDataAppItemsList(liveData: LiveData<List<AppInfo>>, onItemClick: (AppInfo)->Unit) {
+fun <T> LiveDataAppItemsList(
+    liveData: LiveData<List<T>>,
+    onLoaded: @Composable() (itemList: List<T>) -> Unit
+) {
     val items by liveData.observeAsState(emptyList())
 
     if (items.isEmpty()) {
         Loader()
     } else {
-        AppList(appList = liveData.value!!, onItemClick)
+        onLoaded(liveData.value!!)
     }
 }
 

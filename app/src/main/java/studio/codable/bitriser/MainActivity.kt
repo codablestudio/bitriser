@@ -13,6 +13,7 @@ import studio.codable.bitriser.base.BaseActivity
 import studio.codable.bitriser.model.AppInfo
 import studio.codable.bitriser.view.Routing
 import studio.codable.bitriser.view.application.ApplicationDetailsFragment
+import studio.codable.bitriser.view.custom.AppList
 import studio.codable.bitriser.view.custom.LiveDataAppItemsList
 import timber.log.Timber
 
@@ -21,7 +22,9 @@ class MainActivity : BaseActivity() {
     companion object {
         @Composable
         fun Content(vm: MainViewModel, onItemClick: (AppInfo) -> Unit) {
-            LiveDataAppItemsList(liveData = vm.apps, onItemClick = onItemClick)
+            LiveDataAppItemsList(liveData = vm.apps) {
+                AppList(appList = it, onItemClick)
+            }
         }
     }
 

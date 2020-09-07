@@ -1,5 +1,5 @@
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id(Plugins.Android.application)
@@ -68,7 +68,8 @@ android {
     }
 
     composeOptions {
-        this.kotlinCompilerExtensionVersion = "1.0.0-alpha01"
+        kotlinCompilerExtensionVersion = Versions.AndroidX.compose
+        kotlinCompilerVersion = Versions.kotlin
     }
 }
 
@@ -79,6 +80,8 @@ repositories {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
+    implementation(Dependencies.material)
+
     implementation(Dependencies.Kotlin.stdlib)
     implementation(Dependencies.Kotlin.reflect)
 
@@ -88,6 +91,7 @@ dependencies {
     implementation(Dependencies.AndroidX.Ktx.core)
     implementation(Dependencies.AndroidX.Ktx.activity)
     implementation(Dependencies.AndroidX.Ktx.viewModel)
+    implementation(Dependencies.AndroidX.Ktx.liveData)
 
     implementation(Dependencies.Koin.android)
     implementation(Dependencies.Koin.viewModel)
@@ -103,9 +107,11 @@ dependencies {
     implementation(Dependencies.AndroidX.Compose.ui)
     implementation(Dependencies.AndroidX.Compose.uiTooling)
     implementation(Dependencies.AndroidX.Compose.foundation)
+    implementation(Dependencies.AndroidX.Compose.foundationLayout)
     implementation(Dependencies.AndroidX.Compose.Material.core)
     implementation(Dependencies.AndroidX.Compose.Material.iconsCore)
     implementation(Dependencies.AndroidX.Compose.Material.iconsExtended)
+    implementation(Dependencies.AndroidX.Compose.Runtime.core)
     implementation(Dependencies.AndroidX.Compose.Runtime.livedata)
 
     implementation(Dependencies.Moshi.core)
@@ -133,3 +139,13 @@ generateSwagger {
     inputFile = file("../app/bitrise_api_swagger.json")
     outputDir = project.layout.projectDirectory.dir("./src/main/java").asFile
 }
+
+// Compiler flag to use experimental Compose APIs
+//tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//        freeCompilerArgs += [
+//            "-Xopt-in=kotlin.RequiresOptIn"
+//        ]
+//    }
+//}

@@ -1,17 +1,17 @@
 object Versions {
 
     object AndroidX {
-        const val coreKtx = "1.3.1"
         const val appCompat = "1.2.0"
         const val constraintLayout = "1.1.3"
         const val junit = "1.1.1"
         const val espresso = "3.2.0"
-        const val compose = "1.0.0-alpha01"
+        const val compose = "1.0.0-alpha02"
 
         object Ktx {
             const val viewModel = "2.2.0"
             const val activity = "1.1.0"
             const val core = "1.3.1"
+            const val liveData = "2.2.0"
         }
     }
 
@@ -22,9 +22,12 @@ object Versions {
     const val junit = "4.13"
     const val retrofit = "2.8.1"
     const val moshi = "1.9.2"
+    const val material = "1.2.0"
 }
 
 object Dependencies {
+
+    const val material = "com.google.android.material:material:${Versions.material}"
 
     object AndroidX {
         const val appCompat = "androidx.appcompat:appcompat:${Versions.AndroidX.appCompat}"
@@ -35,9 +38,14 @@ object Dependencies {
 
         object Compose {
 
+            const val animation =
+                "androidx.compose.animation:animation:${Versions.AndroidX.compose}"
             const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
             const val uiTooling = "androidx.ui:ui-tooling:${Versions.AndroidX.compose}"
-            const val foundation = "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
+            const val foundation =
+                "androidx.compose.foundation:foundation:${Versions.AndroidX.compose}"
+            const val foundationLayout =
+                "androidx.compose.foundation:foundation-layout:${Versions.AndroidX.compose}"
 
             object Material {
                 const val core = "androidx.compose.material:material:${Versions.AndroidX.compose}"
@@ -46,7 +54,10 @@ object Dependencies {
             }
 
             object Runtime{
-                const val livedata = "androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}"
+                const val core = "androidx.compose.runtime:runtime:${Versions.AndroidX.compose}"
+                const val livedata =
+                    "androidx.compose.runtime:runtime-livedata:${Versions.AndroidX.compose}"
+
             }
         }
 
@@ -55,6 +66,8 @@ object Dependencies {
                 "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.Ktx.viewModel}"
             const val activity = "androidx.activity:activity-ktx:${Versions.AndroidX.Ktx.activity}"
             const val core = "androidx.core:core-ktx:${Versions.AndroidX.Ktx.core}"
+            const val liveData =
+                "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.Ktx.liveData}"
         }
     }
 
