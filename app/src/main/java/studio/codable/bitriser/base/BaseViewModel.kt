@@ -9,7 +9,7 @@ import studio.codable.bitriser.util.errorHandling.DisplayableError
 import studio.codable.bitriser.util.networking.NetworkResult
 
 abstract class BaseViewModel : ViewModel() {
-    private val _errors = MutableLiveData<Event<DisplayableError>>()
+    protected val _errors = MutableLiveData<Event<DisplayableError>>()
     val errors: LiveData<Event<DisplayableError>> = _errors
 
     protected val _loading = MediatorLiveData<Event<Boolean>>().apply {

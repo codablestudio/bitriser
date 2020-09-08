@@ -1,14 +1,15 @@
 package studio.codable.bitriser
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Button
 import androidx.compose.material.Tab
 import androidx.compose.material.TabConstants
 import androidx.compose.material.TabConstants.defaultTabIndicatorOffset
 import androidx.compose.material.TabRow
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
 import com.github.zsoltk.compose.backpress.AmbientBackPressHandler
@@ -23,7 +24,7 @@ import studio.codable.bitriser.view.application.ApplicationDetailsFragment
 import studio.codable.bitriser.view.custom.AppList
 import studio.codable.bitriser.view.custom.BuildList
 import studio.codable.bitriser.view.custom.LoaderUntilLoaded
-import timber.log.Timber
+import studio.codable.bitriser.view.custom.showError
 
 class MainActivity : BaseActivity() {
 
@@ -52,12 +53,12 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        vm.errors.observe(this) { event ->
-            event.getContentIfNotHandled()?.let {
-                Timber.e(it.toString())
-                Toast.makeText(this, it.extractStringToDisplay(), Toast.LENGTH_SHORT).show()
-            }
-        }
+//        vm.errors.observe(this) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                Timber.e(it.toString())
+//                Toast.makeText(this, it.extractStringToDisplay(), Toast.LENGTH_SHORT).show()
+//            }
+//        }
     }
 
     override fun onBackPressed() {
@@ -92,9 +93,18 @@ private fun MainContent(
     backStack: BackStack<Routing>,
     vm: MainViewModel
 ) {
+    vm.errors.observeAsState().value?.getContentIfNotHandled()?.let {
+        showError(error = it)
+    }
+
     when (val routing = backStack.last()) {
         is Routing.HomeScreen -> {
-            Tabs(0, vm, backStack)
+            Column {
+                Tabs(0, vm, backStack)
+                Button(onClick = vm::postError) {
+                    Text(text = "show error")
+                }
+            }
         }
 
         is Routing.AppDetails -> {
@@ -124,7 +134,7 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: Ba
         },
         TabItem("Builds") {
             LoaderUntilLoaded(itemList = vm.builds) { builds ->
-                BuildList(builds = builds){
+                BuildList(builds = builds) {
 
                 }
             }
@@ -145,7 +155,7 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: Ba
             }
         }
 
-        when(state){
+        when (state) {
             0 -> vm.getApps()
             1 -> vm.getBuilds()
         }
