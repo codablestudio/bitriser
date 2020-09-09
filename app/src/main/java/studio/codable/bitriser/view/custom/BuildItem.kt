@@ -1,10 +1,7 @@
 package studio.codable.bitriser.view.custom
 
 import androidx.compose.foundation.Text
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ConstraintLayout
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
@@ -17,14 +14,11 @@ import studio.codable.bitriser.model.BuildInfo
 
 @Composable
 fun BuildItem(
-    onItemClick: (BuildInfo) -> Unit,
+    modifier: Modifier,
     build: BuildInfo
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable(onClick = { onItemClick(build) }),
+        modifier = modifier,
         shape = RoundedCornerShape(4.dp)
     ) {
         ConstraintLayout {
