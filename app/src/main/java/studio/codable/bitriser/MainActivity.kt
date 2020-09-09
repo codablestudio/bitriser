@@ -13,8 +13,10 @@ import androidx.compose.material.TabRow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.WithConstraints
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.onPositioned
+import androidx.compose.ui.platform.DensityAmbient
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.unit.dp
 import com.github.zsoltk.compose.backpress.AmbientBackPressHandler
@@ -123,8 +125,9 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: Ba
     var selectedTabIndex by remember { mutableStateOf(defaultSelectedIndex) }
 
     WithConstraints(modifier = Modifier.padding(20.dp)) {
-        val boxWidth = constraints.maxWidth
-        val tabWidthModifier = Modifier.preferredWidth(boxWidth.dp)
+        val boxWidthPx = constraints.maxWidth
+        val boxWidthDp = with(DensityAmbient.current) { boxWidthPx.toDp() }
+        val tabWidthModifier = Modifier.preferredWidth(boxWidthDp)
 
         val tabItems = listOf(
             TabItem("Apps") {
@@ -178,24 +181,34 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: Ba
 //            val displayMetrics = resources.displayMetrics
 //            val screenWidth = displayMetrics.widthPixels / displayMetrics.density
 
+            fun determineSelectedTabIndex(position: Offset): Int {
+                var calculatedIndex = (abs(position.x) / boxWidthPx).toInt()
+
+                val positionFromZero = abs(position.x) - selectedTabIndex * boxWidthPx
+
+                if (positionFromZero > 2 * boxWidthPx / 3) {
+                    calculatedIndex++
+                }
+
+                return if (calculatedIndex <= tabItems.size - 1) calculatedIndex else tabItems.size - 1
+            }
+
             ScrollableRow(
-                modifier = Modifier.preferredWidth(boxWidth.dp)
+                modifier = tabWidthModifier
 //                .scrollable(
 //                    orientation = Orientation.Horizontal,
 //                    controller = scrollController
 //                )
                     .onPositioned { layoutCoordinates ->
                         val position = layoutCoordinates.positionInParent
-                        Timber.d("Position: $position, boxWidth: $boxWidth")
+                        Timber.d("Position: $position, boxWidth: $boxWidthPx")
 
-                        val calculatedIndex = ((abs(position.x)) / boxWidth).toInt()
-                        selectedTabIndex =
-                            if (calculatedIndex <= tabItems.size - 1) calculatedIndex else tabItems.size - 1
+                        selectedTabIndex = determineSelectedTabIndex(position)
                     }
             ) {
                 Row {
                     tabItems.forEach {
-                        Box(modifier = Modifier.preferredWidth(boxWidth.dp)) { it.composable() }
+                        Box(modifier = tabWidthModifier) { it.composable() }
                     }
                 }
             }

@@ -18,6 +18,7 @@ fun <T> ListWithDividers(
 ) {
     LazyColumnForIndexed(modifier = modifier, items = itemList) { index, item ->
         child(modifier.clickable(onClick = { onItemClick(item) }), index, item)
+
         if (index != itemList.size - 1) {
             Divider(
                 modifier = modifier.padding(horizontal = 30.dp),

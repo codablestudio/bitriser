@@ -18,7 +18,7 @@ fun AppItem(modifier: Modifier, appInfo: AppInfo) {
         modifier = modifier,
         shape = RoundedCornerShape(4.dp)
     ) {
-        ConstraintLayout {
+        ConstraintLayout(modifier) {
             val (text_appTitle, text_repoOwner, text_repoUrl) = createRefs()
 
             Text(
