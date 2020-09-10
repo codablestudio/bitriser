@@ -1,13 +1,15 @@
 package studio.codable.bitriser
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import studio.codable.bitriser.base.BaseViewModel
 import studio.codable.bitriser.model.AppInfo
 import studio.codable.bitriser.model.BuildInfo
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import studio.codable.bitriser.util.Event
+import studio.codable.bitriser.util.errorHandling.DisplayableError
 import studio.codable.bitriser.util.repository.application.IApplicationRepository
 import studio.codable.bitriser.util.repository.builds.IBuildsRepository
 
@@ -37,4 +39,21 @@ class MainViewModel(
             }
         }
     }
+
+    fun postError() {
+        val error = MyError()
+
+        _errors.value = Event(error)
+    }
+}
+
+class MyError : DisplayableError {
+    override val code: Int?
+        get() = null
+    override val message: String?
+        get() = null
+    override val causedBy: Throwable?
+        get() = null
+
+    override fun extractStringToDisplay(): String = "This is an error"
 }
