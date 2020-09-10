@@ -15,7 +15,7 @@ object Versions {
         }
     }
 
-    const val kotlin = "1.4.0"
+    const val kotlin = "1.4.10"
     const val okHttp = "4.8.1"
     const val timber = "4.7.1"
     const val koin = "2.2.0-alpha-1"
