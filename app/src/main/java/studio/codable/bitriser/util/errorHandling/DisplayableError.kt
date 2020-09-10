@@ -7,3 +7,9 @@ interface DisplayableError {
 
     fun extractStringToDisplay(): String?
 }
+
+class EmptyDisplayableError(override val message: String?) : DisplayableError {
+    override val causedBy: Throwable? = null
+    override val code: Int? = null
+    override fun extractStringToDisplay(): String? = message
+}

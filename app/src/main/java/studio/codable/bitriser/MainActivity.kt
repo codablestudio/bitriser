@@ -5,16 +5,14 @@ import androidx.compose.foundation.Box
 import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Tab
-import androidx.compose.material.TabConstants
+import androidx.compose.material.*
 import androidx.compose.material.TabConstants.defaultTabIndicatorOffset
-import androidx.compose.material.TabRow
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.WithConstraints
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.onPositioned
 import androidx.compose.ui.platform.DensityAmbient
@@ -27,6 +25,7 @@ import com.github.zsoltk.compose.router.Router
 import org.koin.android.viewmodel.ext.android.viewModel
 import studio.codable.bitriser.base.BaseActivity
 import studio.codable.bitriser.model.AppInfo
+import studio.codable.bitriser.model.BuildInfo
 import studio.codable.bitriser.view.Routing
 import studio.codable.bitriser.view.application.ApplicationDetailsFragment
 import studio.codable.bitriser.view.custom.*
@@ -106,17 +105,76 @@ private fun MainContent(
 
     when (val routing = backStack.last()) {
         is Routing.HomeScreen -> {
-            Column {
-                Tabs(0, vm, backStack)
-                Button(onClick = vm::postError) {
-                    Text(text = "show error")
+            val bottomDrawerState =
+                rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
+
+            var selectedBuild: BuildInfo? by remember { mutableStateOf(null) }
+
+            val tabItems = listOf(
+                TabItem("Apps") { modifier ->
+                    LoaderUntilLoaded(itemList = vm.apps) { apps ->
+                        ListWithDividers(
+                            modifier = modifier.padding(8.dp),
+                            itemList = apps,
+                            onItemClick = {
+                                backStack.push(Routing.AppDetails(it))
+                            }) { modifier, _, item -> AppItem(modifier = modifier, item) }
+                    }
+                },
+                TabItem("Builds") { modifier ->
+                    LoaderUntilLoaded(itemList = vm.builds) { builds ->
+                        ListWithDividers(
+                            modifier = modifier.padding(8.dp),
+                            itemList = builds,
+                            onItemClick = {
+                                selectedBuild = it
+                                bottomDrawerState.open()
+                            }) { modifier, _, item -> BuildItem(modifier = modifier, build = item) }
+                    }
+                },
+                TabItem("treci") {
+                    Text("treci")
                 }
-            }
+            )
+
+            BottomDrawerLayout(
+                drawerState = bottomDrawerState,
+                gesturesEnabled = bottomDrawerState.isOpen,
+                drawerContent = {
+                    BuildDetails(selectedBuild = selectedBuild)
+                }) { HomeScreenContent(vm = vm, tabItems = tabItems) }
         }
 
         is Routing.AppDetails -> {
             OpenAppDetails(routing.appInfo)
         }
+    }
+}
+
+@Composable
+fun HomeScreenContent(vm: MainViewModel, tabItems: List<TabItem>) {
+
+    Surface(color = Color.Blue) {
+        Column {
+            Tabs(0, vm, tabItems)
+
+            Divider(color = Color.Green, thickness = 4.dp)
+
+            Surface(color = Color.Yellow) {
+                Button(onClick = vm::postError) {
+                    Text(text = "show error")
+                }
+            }
+
+            Divider(color = Color.Green, thickness = 4.dp)
+        }
+    }
+}
+
+@Composable
+fun BuildDetails(selectedBuild: BuildInfo?) {
+    selectedBuild?.let {
+        Text(text = it.triggeredAt.toString())
     }
 }
 
@@ -128,58 +186,41 @@ private fun OpenAppDetails(appInfo: AppInfo) {
 }
 
 @Composable
-private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: BackStack<Routing>) {
+private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, tabItems: List<TabItem>) {
     var selectedTabIndex by remember { mutableStateOf(defaultSelectedIndex) }
 
-    WithConstraints(modifier = Modifier.padding(20.dp)) {
-        val boxWidthPx = constraints.maxWidth
-        val boxWidthDp = with(DensityAmbient.current) { boxWidthPx.toDp() }
-        val tabWidthModifier = Modifier.preferredWidth(boxWidthDp)
-
-        val tabItems = listOf(
-            TabItem("Apps") {
-                LoaderUntilLoaded(itemList = vm.apps) { apps ->
-                    ListWithDividers(
-                        modifier = tabWidthModifier.padding(8.dp),
-                        itemList = apps,
-                        onItemClick = {
-                            backStack.push(Routing.AppDetails(it))
-                        }) { modifier, _, item -> AppItem(modifier = modifier, item) }
-                }
-            },
-            TabItem("Builds") {
-                LoaderUntilLoaded(itemList = vm.builds) { builds ->
-                    ListWithDividers(
-                        modifier = tabWidthModifier.padding(8.dp),
-                        itemList = builds,
-                        onItemClick = {
-                            // nothing yet
-                        }) { modifier, _, item -> BuildItem(modifier = modifier, build = item) }
-                }
-            },
-            TabItem("treci") {
-                Text("treci")
-            }
+    WithConstraints(
+        modifier = Modifier.padding(
+            start = 20.dp,
+            end = 20.dp,
+            top = 20.dp,
+            bottom = 60.dp
         )
-        Column {
-            TabRow(selectedTabIndex = selectedTabIndex, indicator = { tabPositions ->
-                TabConstants.DefaultIndicator(
-                    Modifier.defaultTabIndicatorOffset(tabPositions[selectedTabIndex])
-                )
-            }) {
-                tabItems.forEachIndexed { index, tabItem ->
-                    Tab(
-                        modifier = Modifier.fillMaxWidth(),
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
-                        text = { Text(text = tabItem.title) })
-                }
-            }
+    ) {
+        Surface(color = Color.Cyan) {
+            val boxWidthPx = constraints.maxWidth
+            val boxWidthDp = with(DensityAmbient.current) { boxWidthPx.toDp() }
+            val tabWidthModifier = Modifier.preferredWidth(boxWidthDp)
 
-            when (selectedTabIndex) {
-                0 -> vm.getApps()
-                1 -> vm.getBuilds()
-            }
+            Column {
+                TabRow(selectedTabIndex = selectedTabIndex, indicator = { tabPositions ->
+                    TabConstants.DefaultIndicator(
+                        Modifier.defaultTabIndicatorOffset(tabPositions[selectedTabIndex])
+                    )
+                }) {
+                    tabItems.forEachIndexed { index, tabItem ->
+                        Tab(
+                            modifier = Modifier.fillMaxWidth(),
+                            selected = selectedTabIndex == index,
+                            onClick = { selectedTabIndex = index },
+                            text = { Text(text = tabItem.title) })
+                    }
+                }
+
+                when (selectedTabIndex) {
+                    0 -> vm.getApps()
+                    1 -> vm.getBuilds()
+                }
 
 //        val scrollController = rememberScrollableController(consumeScrollDelta = { it/20 })
 
@@ -188,34 +229,35 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: Ba
 //            val displayMetrics = resources.displayMetrics
 //            val screenWidth = displayMetrics.widthPixels / displayMetrics.density
 
-            fun determineSelectedTabIndex(position: Offset): Int {
-                var calculatedIndex = (abs(position.x) / boxWidthPx).toInt()
+                fun determineSelectedTabIndex(position: Offset): Int {
+                    var calculatedIndex = (abs(position.x) / boxWidthPx).toInt()
 
-                val positionFromZero = abs(position.x) - selectedTabIndex * boxWidthPx
+                    val positionFromZero = abs(position.x) - selectedTabIndex * boxWidthPx
 
-                if (positionFromZero > 2 * boxWidthPx / 3) {
-                    calculatedIndex++
+                    if (positionFromZero > 2 * boxWidthPx / 3) {
+                        calculatedIndex++
+                    }
+
+                    return if (calculatedIndex <= tabItems.size - 1) calculatedIndex else tabItems.size - 1
                 }
 
-                return if (calculatedIndex <= tabItems.size - 1) calculatedIndex else tabItems.size - 1
-            }
-
-            ScrollableRow(
-                modifier = tabWidthModifier
+                ScrollableRow(
+                    modifier = tabWidthModifier
 //                .scrollable(
 //                    orientation = Orientation.Horizontal,
 //                    controller = scrollController
 //                )
-                    .onPositioned { layoutCoordinates ->
-                        val position = layoutCoordinates.positionInParent
-                        Timber.d("Position: $position, boxWidth: $boxWidthPx")
+                        .onPositioned { layoutCoordinates ->
+                            val position = layoutCoordinates.positionInParent
+                            Timber.d("Position: $position, boxWidth: $boxWidthPx")
 
-                        selectedTabIndex = determineSelectedTabIndex(position)
-                    }
-            ) {
-                Row {
-                    tabItems.forEach {
-                        Box(modifier = tabWidthModifier) { it.composable() }
+                            selectedTabIndex = determineSelectedTabIndex(position)
+                        }
+                ) {
+                    Row {
+                        tabItems.forEach {
+                            Box(modifier = tabWidthModifier) { it.composable(tabWidthModifier) }
+                        }
                     }
                 }
             }
@@ -223,4 +265,7 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, backStack: Ba
     }
 }
 
-data class TabItem(val title: String, val composable: @Composable() () -> Unit)
+data class TabItem(
+    val title: String,
+    val composable: @Composable() (modifier: Modifier) -> Unit
+)
