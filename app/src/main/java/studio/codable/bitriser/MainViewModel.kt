@@ -1,6 +1,8 @@
 package studio.codable.bitriser
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import studio.codable.bitriser.base.BaseViewModel
@@ -38,14 +40,14 @@ class MainViewModel(
         }
     }
 
-    fun postError(){
+    fun postError() {
         val error = MyError()
 
         _errors.value = Event(error)
     }
 }
 
-class MyError: DisplayableError{
+class MyError : DisplayableError {
     override val code: Int?
         get() = null
     override val message: String?
