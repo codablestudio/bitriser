@@ -2,7 +2,9 @@ package studio.codable.bitriser
 
 import android.os.Bundle
 import androidx.compose.foundation.Box
+import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.TabConstants.defaultTabIndicatorOffset
@@ -27,6 +29,7 @@ import studio.codable.bitriser.model.BuildInfo
 import studio.codable.bitriser.view.Routing
 import studio.codable.bitriser.view.application.ApplicationDetailsFragment
 import studio.codable.bitriser.view.custom.*
+import timber.log.Timber
 
 class MainActivity : BaseActivity() {
 
@@ -79,16 +82,52 @@ fun MainActivityContent(
     vm: MainViewModel
 ) {
     Router("BuildList", defaultRouting) { backStack ->
-        when (val routing = backStack.last()) {
-            is Routing.HomeScreen -> {
-                MainContent(backStack = backStack, vm = vm)
-            }
 
-            is Routing.AppDetails -> {
-                ApplicationDetailsFragment.Content(
-                    appInfo = routing.appInfo
-                )
+        val drawerItems = listOf(
+            DrawerItem("Profile") {
+                Timber.d("profile")
+            },
+            DrawerItem("Home") {
+                Timber.d("home")
+            },
+            DrawerItem("Test") {
+                Timber.d("test")
             }
+        )
+
+        ModalDrawerLayout(drawerContent = {
+            ScrollableColumn(modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
+                drawerItems.forEach {
+                    Surface(
+                        modifier = Modifier
+                            .clickable(onClick = it.onClick)
+                            .padding(bottom = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Text(text = it.title)
+                    }
+                }
+            }
+        }) {
+            HandleRouting(backStack, vm)
+        }
+    }
+}
+
+@Composable
+private fun HandleRouting(
+    backStack: BackStack<Routing>,
+    vm: MainViewModel
+) {
+    when (val routing = backStack.last()) {
+        is Routing.HomeScreen -> {
+            MainContent(backStack = backStack, vm = vm)
+        }
+
+        is Routing.AppDetails -> {
+            ApplicationDetailsFragment.Content(
+                appInfo = routing.appInfo
+            )
         }
     }
 }
@@ -285,4 +324,9 @@ data class TabItem(
     val title: String,
     val onSelected: () -> Unit,
     val composable: @Composable() (modifier: Modifier) -> Unit
+)
+
+data class DrawerItem(
+    val title: String,
+    val onClick: () -> Unit
 )
