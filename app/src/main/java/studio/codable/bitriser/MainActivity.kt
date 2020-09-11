@@ -110,7 +110,9 @@ private fun MainContent(
             var selectedBuild: BuildInfo? by remember { mutableStateOf(null) }
 
             val tabItems = listOf(
-                TabItem("Apps") { modifier ->
+                TabItem(title = "Apps", onSelected = {
+                    vm.getApps()
+                }) { modifier ->
                     Surface(color = Color.Magenta) {
                         LoaderUntilLoaded(itemList = vm.apps) { apps ->
                             ListWithDividers(
@@ -122,7 +124,9 @@ private fun MainContent(
                         }
                     }
                 },
-                TabItem("Builds") { modifier ->
+                TabItem(title = "Builds", onSelected = {
+                    vm.getBuilds()
+                }) { modifier ->
                     Surface(color = Color.Red) {
                         LoaderUntilLoaded(itemList = vm.builds) { builds ->
                             ListWithDividers(
@@ -140,7 +144,9 @@ private fun MainContent(
                         }
                     }
                 },
-                TabItem("treci") {
+                TabItem(title = "treci", onSelected = {
+
+                }) {
                     Surface(color = Color.Yellow) {
                         Text("treci")
                     }
@@ -238,10 +244,7 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, tabItems: Lis
                     }
                 }
 
-                when (selectedTabIndex) {
-                    0 -> vm.getApps()
-                    1 -> vm.getBuilds()
-                }
+                tabItems[selectedTabIndex].onSelected()
 
                 Box(
                     modifier = Modifier
@@ -280,5 +283,6 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, tabItems: Lis
 
 data class TabItem(
     val title: String,
+    val onSelected: () -> Unit,
     val composable: @Composable() (modifier: Modifier) -> Unit
 )
