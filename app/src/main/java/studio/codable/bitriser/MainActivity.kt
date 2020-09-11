@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.TabConstants.defaultTabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Layout
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.WithConstraints
 import androidx.compose.ui.gesture.scrollorientationlocking.Orientation
@@ -54,8 +55,8 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        vm.getApps()
-        vm.getBuilds()
+//        vm.getApps()
+//        vm.getBuilds()
 
 //        vm.errors.observe(this) { event ->
 //            event.getContentIfNotHandled()?.let {
@@ -237,14 +238,13 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, tabItems: Lis
                     }
                 }
 
-//                when (selectedTabIndex) {
-//                    0 -> vm.getApps()
-//                    1 -> vm.getBuilds()
-//                }
+                when (selectedTabIndex) {
+                    0 -> vm.getApps()
+                    1 -> vm.getBuilds()
+                }
 
                 Box(
                     modifier = Modifier
-                        .wrapContentSize()
                         .swipeable(
                             state = swipeableState,
                             anchors = anchors,
@@ -252,9 +252,26 @@ private fun Tabs(defaultSelectedIndex: Int = 0, vm: MainViewModel, tabItems: Lis
                             orientation = Orientation.Horizontal
                         )
                 ) {
-                    Row(
-                        modifier = Modifier.wrapContentSize().offsetPx(x = swipeableState.offset)
-                    ) { tabItems.forEach { it.composable(tabWidthModifier.fillMaxHeight()) } }
+                    Layout(
+                        children = { tabItems.forEach { it.composable(tabWidthModifier) } },
+                        modifier = Modifier
+                            .offsetPx(x = swipeableState.offset)
+                    ) { measurables, constraints ->
+                        val placeables = measurables.map {
+                            it.measure(constraints)
+                        }
+
+                        var xPos = 0
+
+                        layout(constraints.maxWidth, constraints.maxHeight) {
+
+                            placeables.forEach { placeable ->
+                                placeable.placeRelative(x = xPos, y = 0)
+
+                                xPos += placeable.width
+                            }
+                        }
+                    }
                 }
             }
         }
